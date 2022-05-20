@@ -1,0 +1,61 @@
+---
+title: "ggiraph"
+author: "Scout Leonard"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggiraph)
+library(palmerpenguins)
+library(tidyverse)
+library(patchwork)
+```
+
+```{r}
+#static ggplot
+ggplot(data = penguins, aes(x = flipper_length_mm,
+                            y = body_mass_g)) +
+  geom_point(aes(color = species)) +
+  theme_minimal()
+```
+
+```{r}
+p1 <- ggplot(data = penguins, aes(x = flipper_length_mm,
+                                  y = body_mass_g)) +
+  geom_point_interactive(aes(color = species, 
+                             tooltip = species, 
+                             data_id = species)) +
+  scale_color_manual(values = c("cyan4", 
+                                "darkorange", 
+                                "darkorchid4")) +
+  theme_minimal()
+
+p2 <- ggplot(data = penguins, aes(x = bill_depth_mm, 
+                                  y = bill_length_mm)) +
+  geom_point_interactive(aes(color = species, 
+                             tooltip = species, 
+                             data_id = species)) +
+  scale_color_manual(values = c("cyan4", 
+                                "darkorange", 
+                                "darkorchid4")) +
+  theme_minimal()
+```
+
+```{r}
+#make girafe object using a ggobject
+girafe(ggobj = p1,
+       options = list(
+         opts_hover(css = "fill:black; stroke: yellow;"),
+         opts_hover_inv(css = "opacity:0.2;"), #inverse: what happens to objects that aren't being hovered over
+         opts_zoom(max = 10)
+         )
+       )
+```
+
+```{r}
+girafe(ggobj = (p1 + p2))
+```
+
