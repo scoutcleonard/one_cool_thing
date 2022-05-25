@@ -1,0 +1,49 @@
+---
+title: "Pins Demo"
+author: "Scout Leonard"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(pins)
+```
+
+```{r}
+meds_2022 <- tribble(
+  ~name, ~shoes,
+  "Desik", "sandals",
+  "Connor", "flipflops",
+  "Dan", "indoors",
+  "Paloma", "tennies"
+)
+```
+
+
+```{r}
+awesome_board <- board_local()
+```
+
+Now we want to add our data to the pinned board so that I can access it, or others who have access to the directory can access. 
+
+```{r}
+awesome_board %>% 
+  pin_write(meds_2022, "meds_2022", version = TRUE)
+```
+
+Once something is added to a pin, you can use pins to call in things. 
+
+```{r}
+awesome_board %>% 
+  pin_read("meds_2022")
+```
+
+If you are creatinga  shared package for a team that uses reusable datasets, this means people don't have to download csvs, but they can exist as an R data object. 
+```{r}
+awesome_board %>% 
+  pin_read("meds_2022", version = "20220525T231206Z-8fa95")
+```
+
